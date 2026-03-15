@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PawSpa · Dog Bath Booking v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'proxima-nova', 'Proxima Nova', 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #E8E4DF;
+  display: flex; justify-content: center; align-items: flex-start;
+  min-height: 100vh; padding: 24px 16px 48px;
+}
+
+/* ── Phone shell ──────────────────────── */
+.phone {
+  width: 375px; height: 812px;
+  background: white;
+  border-radius: 40px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+
+/* ── Page header ──────────────────────── */
+.page-header {
+  flex-shrink: 0; padding: 10px 20px 12px;
+  display: flex; align-items: center; gap: 8px;
+  background: white;
+}
+.back-btn {
+  width: 36px; height: 36px; border: none; background: none;
+  border-radius: 50%; cursor: pointer; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  color: #111827; flex-shrink: 0;
+}
+/* Generic SVG icon helper */
+.ico { display: block; flex-shrink: 0; }
+.header-title { font-size: 24px; font-weight: 700; color: #111827; }
+
+/* ── Scrollable content ───────────────── */
+.content { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.step { display: none; }
+.step.active { display: block; }
+.inner-pad { padding: 16px 20px 24px; }
+.step-subtitle { font-size: 14px; color: #6B7280; margin-bottom: 20px; line-height: 1.5; }
+
+/* ══════════════════════════════════════ */
+/*  STEP 0 — HOMEPAGE                    */
+/* ══════════════════════════════════════ */
+.homepage { background: #FFF5F0; min-height: 100%; position: relative; overflow: hidden; }
+.blob { position: absolute; border-radius: 50%; pointer-events: none; }
+.blob-left  { width: 220px; height: 220px; background: #FFD9BB; top: -80px; left: -90px; opacity: 0.6; }
+.blob-right { width: 200px; height: 200px; background: #FECACA; top: -60px; right: -70px; opacity: 0.5; }
+.status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px 6px; position: relative; z-index: 1;
+}
+.status-time { font-size: 15px; font-weight: 700; color: #111827; }
+.status-icons { display: flex; gap: 5px; align-items: center; font-size: 12px; color: #111827; }
+.browser-bar {
+  margin: 4px 12px 0;
+  background: rgba(255,255,255,0.75); border-radius: 10px; padding: 7px 14px;
+  display: flex; align-items: center; gap: 8px; position: relative; z-index: 1;
+}
+.browser-url { font-size: 13px; color: #6B7280; flex: 1; text-align: center; }
+.home-body { padding: 22px 20px 0; position: relative; z-index: 1; }
+.greeting-row { display: flex; justify-content: space-between; align-items: flex-start; }
+.greeting-text h1 { font-size: 32px; font-weight: 800; color: #111827; }
+.greeting-text p  { font-size: 14px; color: #6B7280; margin-top: 4px; line-height: 1.4; white-space: nowrap; }
+.user-avatar {
+  width: 40px; height: 40px; flex-shrink: 0; cursor: pointer;
+}
+.upcoming-card {
+  margin-top: 20px; background: white; border-radius: 16px;
+  border: 1px solid #E6E6E6; padding: 16px;
+}
+.upcoming-top { display: flex; align-items: center; gap: 8px; }
+.upcoming-label { font-size: 18px; font-weight: 700; color: #111827; }
+.upcoming-pill  { font-size: 12px; color: #6B7280; background: #F3F4F6; border-radius: 8px; padding: 2px 8px; }
+.upcoming-date-row { display: flex; align-items: center; gap: 16px; padding: 16px 0; margin-top: 16px; border-bottom: 1px solid #E9ECEF; font-size: 16px; color: #111827; }
+.upcoming-pet-row  { display: flex; align-items: center; gap: 16px; padding: 16px 0 0; }
+.pet-ava-sm {
+  width: 36px; height: 36px; border-radius: 50%; background: #F3F4F6;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.pet-info-sm { display: flex; flex-direction: column; gap: 1px; }
+.pet-name-sm    { font-size: 16px; font-weight: 700; color: #111827; }
+.pet-service-sm { font-size: 14px; color: #6B7280; }
+.pet-groomer-sm { font-size: 12px; color: #6B7280; display: flex; align-items: center; gap: 5px; }
+.groomer-ava-xs {
+  width: 18px; height: 18px; border-radius: 50%; background: #E5E7EB;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 10px;
+}
+.book-cta {
+  width: 100%; height: 40px; background: #F97316; border: none; border-radius: 9999px;
+  font-size: 16px; font-weight: 600; color: white; cursor: pointer; margin-top: 16px;
+  font-family: inherit; transition: opacity 0.2s;
+}
+.book-cta:hover { opacity: 0.9; }
+.menu-card {
+  margin-top: 16px; background: white; border-radius: 16px;
+  border: 1px solid #E6E6E6; overflow: hidden;
+}
+.menu-row {
+  display: flex; align-items: center; gap: 14px;
+  height: 56px; padding: 0 16px; cursor: pointer; position: relative;
+}
+.menu-row:not(:last-child)::after {
+  content: ''; position: absolute; bottom: 0;
+  left: 54px; right: 16px; height: 1px; background: #F3F4F6;
+}
+.menu-icon    { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.menu-icon img, .menu-chevron img { display: block; width: 24px; height: 24px; }
+.upcoming-cal-icon { width: 36px; height: 36px; flex-shrink: 0; display: block; }
+.menu-label   { font-size: 16px; color: #111827; flex: 1; }
+.menu-chevron { color: #D1D5DB; display: flex; align-items: center; }
+.brand-footer {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin: 20px 0 16px;
+}
+.brand-logo {
+  width: 32px; height: 32px; border-radius: 50%; background: #F97316;
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.brand-name  { font-size: 14px; font-weight: 700; color: #111827; }
+.brand-addr  { font-size: 12px; color: #6B7280; }
+
+/* ══════════════════════════════════════ */
+/*  STEP 1 — SELECT PET                  */
+/* ══════════════════════════════════════ */
+.pet-list { display: flex; flex-direction: column; gap: 12px; }
+.pet-list-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.pet-list-title { font-size: 16px; font-weight: 700; color: #111827; }
+.pet-add-link   { font-size: 15px; font-weight: 600; color: #F97316; cursor: pointer; }
+
+.pet-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.pet-card {
+  border: 1.5px solid #E5E7EB; border-radius: 16px; padding: 16px 12px 20px;
+  cursor: pointer; background: white; position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  transition: all 0.2s;
+}
+.pet-card:hover    { border-color: #FED7AA; }
+.pet-card.selected { border: 2px solid #F97316; background: #FFF7ED; }
+.pet-card-corner {
+  position: absolute; top: 10px; right: 10px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #F3F4F6; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: #9CA3AF;
+}
+.pet-card.selected .pet-card-corner {
+  background: #F97316; color: white; font-size: 14px;
+}
+.pet-avatar {
+  width: 64px; height: 64px; border-radius: 50%; background: #F3F4F6;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; margin-bottom: 12px; margin-top: 8px;
+}
+.pet-card-name { font-size: 15px; font-weight: 700; color: #111827; text-align: center; }
+.pet-card-meta { font-size: 13px; color: #6B7280; margin-top: 3px; text-align: center; }
+
+/* ══════════════════════════════════════ */
+/*  STEP 2 — SELECT SERVICE & ADD-ONS    */
+/* ══════════════════════════════════════ */
+
+/* ── Category dropdown ── */
+.cat-dropdown-wrap { position: relative; margin-bottom: 16px; }
+.cat-dropdown-sel {
+  display: flex; align-items: center; justify-content: space-between;
+  border: 1.5px solid #E5E7EB; border-radius: 12px; padding: 12px 16px;
+  font-size: 15px; color: #111827; background: white; cursor: pointer;
+  font-family: inherit; transition: border-color 0.15s;
+}
+.cat-dropdown-sel:hover { border-color: #D1D5DB; }
+.cat-dropdown-sel.open  { border-color: #F97316; }
+.cat-dd-caret { font-size: 13px; color: #6B7280; transition: transform 0.2s; }
+.cat-dropdown-sel.open .cat-dd-caret { transform: rotate(180deg); }
+.cat-dd-menu {
+  display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: white; border: 1.5px solid #E5E7EB; border-radius: 12px;
+  overflow: hidden; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.cat-dd-menu.open { display: block; }
+.cat-dd-item {
+  padding: 12px 16px; font-size: 15px; color: #111827; cursor: pointer; transition: background 0.1s;
+}
+.cat-dd-item:hover   { background: #F9FAFB; }
+.cat-dd-item.active  { color: #F97316; font-weight: 600; }
+
+/* ── Service list view ── */
+.service-list { display: flex; flex-direction: column; gap: 10px; }
+.service-card {
+  border: 1.5px solid #E5E7EB; border-radius: 14px; padding: 16px;
+  cursor: pointer; background: white;
+  display: flex; align-items: center; gap: 12px;
+  transition: border-color 0.15s;
+}
+.service-card:hover { border-color: #D1D5DB; }
+.svc-info  { flex: 1; min-width: 0; }
+.svc-name  { font-size: 15px; font-weight: 700; color: #111827; }
+.svc-show-details { font-size: 13px; color: #F97316; margin-top: 3px; }
+.svc-price-pill {
+  font-size: 14px; font-weight: 600; color: #111827;
+  background: #F3F4F6; border-radius: 9999px;
+  padding: 6px 14px; flex-shrink: 0; white-space: nowrap;
+}
+
+/* ── Pinned selected service card ── */
+.svc-pinned-card {
+  border: 2px solid #F97316; border-radius: 14px; padding: 16px;
+  background: #FFF7ED; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.svc-pinned-info { flex: 1; min-width: 0; }
+.svc-pinned-name  { font-size: 15px; font-weight: 700; color: #111827; }
+.svc-pinned-show  { font-size: 13px; color: #F97316; margin-top: 3px; cursor: pointer; }
+.svc-pinned-price {
+  font-size: 14px; font-weight: 600; color: #111827;
+  background: white; border-radius: 9999px;
+  padding: 6px 14px; flex-shrink: 0; white-space: nowrap;
+}
+
+/* ── Add-ons ── */
+.addons-wrap { margin-top: 4px; }
+.addons-title { font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 14px; }
+.addon-cat-wrap { position: relative; margin-bottom: 12px; }
+.addon-cat-sel {
+  display: flex; align-items: center; justify-content: space-between;
+  border: 1.5px solid #E5E7EB; border-radius: 9999px; padding: 11px 18px;
+  font-size: 15px; color: #111827; background: white; cursor: pointer;
+  transition: border-color 0.15s;
+}
+.addon-cat-sel:hover { border-color: #D1D5DB; }
+.addon-cat-caret { font-size: 13px; color: #6B7280; }
+.addon-list { display: flex; flex-direction: column; gap: 10px; }
+.addon-card {
+  border: 1.5px solid #E5E7EB; border-radius: 14px; padding: 16px;
+  cursor: pointer; background: white;
+  display: flex; align-items: center; gap: 12px;
+  transition: all 0.2s;
+}
+.addon-card:hover    { border-color: #FED7AA; }
+.addon-card.selected { border: 2px solid #F97316; background: #FFF7ED; }
+.addon-info  { flex: 1; min-width: 0; }
+.addon-name  { font-size: 15px; font-weight: 700; color: #111827; }
+.addon-show-details { font-size: 13px; color: #F97316; margin-top: 3px; }
+.addon-price-pill {
+  font-size: 14px; font-weight: 600; color: #111827;
+  background: #F3F4F6; border-radius: 9999px;
+  padding: 6px 14px; flex-shrink: 0; white-space: nowrap;
+}
+.addon-card.selected .addon-price-pill { background: white; }
+
+/* ══════════════════════════════════════ */
+/*  STEP 3 — DATE & TIME                 */
+/* ══════════════════════════════════════ */
+
+/* Groomer dropdown — NO shadow per design system */
+.groomer-wrap { position: relative; margin-bottom: 20px; }
+.groomer-selector {
+  border: 1.5px solid #E5E7EB; border-radius: 12px; padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; background: white;
+  /* NO box-shadow — design system: selectors are plain bordered inputs */
+  transition: border-color 0.2s; user-select: none;
+}
+.groomer-selector:hover, .groomer-selector.open { border-color: #F97316; }
+.groomer-ava {
+  width: 36px; height: 36px; border-radius: 50%; background: #F3F4F6;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #374151; flex-shrink: 0; letter-spacing: -0.5px;
+}
+.groomer-lbl  { font-size: 11px; color: #9CA3AF; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.groomer-name { font-size: 15px; font-weight: 600; color: #111827; margin-top: 2px; }
+.groomer-caret { font-size: 13px; color: #9CA3AF; margin-left: auto; transition: transform 0.2s; }
+.groomer-caret.open { transform: rotate(180deg); }
+.groomer-dropdown {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+  background: white; border: 1.5px solid #E5E7EB;
+  border-radius: 12px; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  z-index: 100; display: none;
+}
+.groomer-dropdown.open { display: block; }
+.groomer-opt {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; cursor: pointer;
+  border-bottom: 1px solid #F3F4F6; transition: background 0.15s;
+}
+.groomer-opt:last-child { border-bottom: none; }
+.groomer-opt:hover  { background: #FFF7ED; }
+.groomer-opt.active { background: #FFF7ED; }
+.groomer-opt-meta  { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.groomer-opt-name-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.groomer-opt-name  { font-size: 15px; font-weight: 600; color: #111827; }
+.groomer-opt-avail { font-size: 12px; color: #9CA3AF; }
+.groomer-opt-check { font-size: 16px; color: #F97316; flex-shrink: 0; }
+.groomer-badge {
+  font-size: 11px; font-weight: 600; border-radius: 9999px;
+  padding: 2px 8px; white-space: nowrap; flex-shrink: 0;
+}
+.groomer-badge-preferred { background: #FFF7ED; color: #F97316; border: 1px solid #FED7AA; }
+.groomer-badge-last      { background: #F3F4F6; color: #6B7280; border: 1px solid #E5E7EB; }
+
+/* Calendar */
+.cal-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+}
+.cal-month-label { font-size: 18px; font-weight: 700; color: #111827; }
+.cal-nav-group { display: flex; align-items: center; gap: 6px; }
+.cal-nav {
+  width: 32px; height: 32px;
+  background: white; border: 1.5px solid #D1D5DB; border-radius: 50%;
+  font-size: 15px; cursor: pointer; color: #374151;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s; line-height: 1; font-family: inherit;
+}
+.cal-nav:hover { border-color: #9CA3AF; }
+.cal-today-btn {
+  height: 32px; padding: 0 13px;
+  background: white; border: 1.5px solid #D1D5DB; border-radius: 16px;
+  font-size: 13px; font-weight: 500; color: #374151; cursor: pointer;
+  font-family: inherit; transition: border-color 0.15s;
+}
+.cal-today-btn:hover { border-color: #9CA3AF; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; text-align: center; margin-bottom: 16px; }
+.cal-weekday { font-size: 12px; color: #9CA3AF; font-weight: 500; padding: 4px 0 8px; }
+.cal-day-cell { display: flex; flex-direction: column; align-items: center; padding: 3px 0; }
+.cal-day {
+  width: 44px; height: 44px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  border-radius: 50%; cursor: pointer; transition: all 0.15s;
+  border: 1.5px solid transparent;
+}
+.cal-day.avail { border-color: #E5E7EB; }
+.cal-day.avail:hover { border-color: #D1D5DB; background: #F9FAFB; }
+.cal-day.selected { background: #F97316; color: white; border-color: #F97316; }
+.cal-day.disabled { cursor: not-allowed; }
+.cal-day.empty { cursor: default; }
+.cal-day-num { font-size: 14px; font-weight: 500; color: #111827; line-height: 1; }
+.cal-day.selected .cal-day-num { color: white; font-weight: 700; }
+.cal-day.disabled .cal-day-num { color: #D1D5DB; }
+.cal-dots-row { display: flex; gap: 3px; align-items: center; }
+.avail-dot { width: 4px; height: 4px; border-radius: 50%; background: #22C55E; flex-shrink: 0; }
+.avail-dot.dot-gray { background: #D1D5DB; }
+.cal-day.selected .avail-dot { background: rgba(255,255,255,0.75); }
+
+/* Time pills */
+.time-section-label {
+  font-size: 13px; font-weight: 600; color: #9CA3AF;
+  margin-bottom: 8px; margin-top: 16px; letter-spacing: 0.3px;
+}
+.time-section-label:first-child { margin-top: 0; }
+.time-pills {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 4px;
+}
+.time-pill {
+  border: 1.5px solid #E5E7EB; border-radius: 9999px;
+  padding: 10px 4px; font-size: 13px; color: #374151; text-align: center;
+  cursor: pointer; background: white; white-space: nowrap;
+  font-family: inherit; transition: all 0.15s;
+}
+.time-pill:hover:not(.busy) { border-color: #FED7AA; }
+.time-pill.selected { border: 2px solid #F97316; color: #F97316; font-weight: 700; background: #FFF7ED; }
+/* ══════════════════════════════════════ */
+/*  STEP 4 — REVIEW BOOKING             */
+/* ══════════════════════════════════════ */
+.review-pad { padding: 20px 20px 32px; display: flex; flex-direction: column; gap: 32px; }
+
+/* Shared card */
+.rv-card {
+  background: white; border: 1px solid #E9ECEF; border-radius: 20px;
+}
+
+/* Section */
+.rv-section { display: flex; flex-direction: column; gap: 12px; }
+.rv-section-title { font-size: 18px; font-weight: 700; color: #333; line-height: 24px; }
+.rv-label { font-size: 14px; font-weight: 500; color: #888C96; line-height: 19px; letter-spacing: 0.14px; }
+.rv-value-lg { font-size: 18px; font-weight: 700; color: #333; line-height: 24px; }
+.rv-value-md { font-size: 16px; font-weight: 500; color: #333; line-height: 22px; }
+
+/* ── Service card ── */
+.rv-svc-header {
+  border: 1px solid #E9ECEF; border-radius: 20px 20px 0 0;
+  background: white; padding: 20px;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: -1px;
+}
+.rv-svc-header-title { font-size: 18px; font-weight: 700; color: #333; line-height: 24px; }
+.rv-svc-body {
+  border: 1px solid #E6E6E6; border-radius: 0 0 20px 20px;
+  background: white; padding: 0 20px 16px; display: flex; flex-direction: column; gap: 16px;
+}
+.rv-svc-body > *:first-child { padding-top: 16px; }
+.rv-datetime-row { display: flex; align-items: stretch; gap: 0; }
+.rv-dt-col { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.rv-dt-divider { width: 1px; background: #E9ECEF; margin: 0 20px; align-self: stretch; }
+.rv-info-block { display: flex; flex-direction: column; gap: 4px; }
+.rv-pet-row { display: flex; align-items: center; gap: 4px; }
+.rv-pet-emoji { font-size: 20px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.rv-svc-details-row {
+  background: #E9ECEF; border-radius: 8px; padding: 20px;
+  display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+}
+.rv-svc-details-lbl { font-size: 14px; font-weight: 500; color: #333; }
+.rv-svc-details-body { display: none; font-size: 14px; color: #6B7280; line-height: 1.6; margin-top: 8px; white-space: pre-line; }
+
+/* ── About you ── */
+.rv-about-card {
+  padding: 20px; position: relative; display: flex; flex-direction: column; gap: 4px;
+}
+.rv-about-name { font-size: 18px; font-weight: 700; color: #333; line-height: 24px; }
+.rv-contact-group { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.rv-edit-btn {
+  position: absolute; top: 0; right: 0; width: 40px; height: 40px;
+  background: linear-gradient(to bottom left, #E9ECEF 50%, transparent 50%);
+  border-radius: 0 20px 0 0; display: flex; align-items: flex-start; justify-content: flex-end;
+  padding: 8px 8px 0 0; cursor: pointer;
+}
+
+/* ── Price ── */
+.rv-disclaimer { font-size: 12px; font-weight: 500; color: #888C96; letter-spacing: 0.24px; }
+.rv-price-inner { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.rv-price-row { display: flex; align-items: center; justify-content: space-between; }
+.rv-price-lbl { font-size: 16px; font-weight: 500; color: #888C96; line-height: 22px; }
+.rv-price-val { font-size: 16px; font-weight: 500; color: #333; line-height: 22px; }
+.rv-price-total {
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid #E9ECEF; padding-top: 16px;
+  font-size: 18px; font-weight: 700; color: #333; line-height: 24px;
+}
+.rv-deposit-alert {
+  background: #EBF8FF; border-radius: 20px; padding: 12px 20px;
+  font-size: 16px; font-weight: 500; color: #333; line-height: 24px;
+}
+/* ── Discount / Cancellation rows ── */
+.rv-row-card {
+  border: 1px solid #E9ECEF; border-radius: 20px; padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+}
+.rv-row-lbl { font-size: 16px; font-weight: 500; color: #333; line-height: 22px; }
+.rv-row-chevron {
+  width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+}
+.rv-row-chevron svg { display: block; }
+.rv-policy-card { border: 1px solid #E6E6E6; border-radius: 20px; padding: 20px; }
+.rv-policy-title { font-size: 16px; font-weight: 700; color: #333; line-height: 22px; margin-bottom: 16px; }
+.rv-policy-text {
+  font-size: 14px; font-weight: 500; color: #828282; line-height: 18px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  margin-bottom: 4px;
+}
+.rv-policy-link { font-size: 14px; font-weight: 500; color: #F97316; letter-spacing: 0.14px; cursor: pointer; }
+
+/* ── Payment ── */
+.rv-payment-card { overflow: hidden; }
+.rv-pay-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; height: 72px; cursor: pointer;
+}
+.rv-pay-row + .rv-pay-row { border-top: 1px solid #E9ECEF; }
+.rv-pay-lbl { font-size: 16px; font-weight: 500; color: #333; line-height: 22px; flex: 1; }
+
+/* ── Additional note ── */
+.rv-note-card { padding: 16px 20px; height: 76px; }
+.rv-note-placeholder { font-size: 16px; font-weight: 500; color: #828282; line-height: 22px; }
+
+/* ── Agreement ── */
+.rv-agreement-card { padding: 20px; display: flex; align-items: center; gap: 20px; }
+.rv-agreement-icon-wrap {
+  position: relative; flex-shrink: 0; width: 60px; height: 48px;
+  background: #E9ECEF; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+.rv-agreement-name { font-size: 18px; font-weight: 700; color: #333; line-height: 24px; }
+.rv-agreement-sign { font-size: 12px; font-weight: 500; color: #F97316; letter-spacing: 0.24px; margin-top: 2px; cursor: pointer; }
+
+/* ══════════════════════════════════════ */
+/*  STEP 5 — SUCCESS                     */
+/* ══════════════════════════════════════ */
+.success-wrap { padding: 40px 20px 20px; text-align: center; }
+.success-icon  { font-size: 72px; margin-bottom: 20px; display: flex; justify-content: center; color: #F97316; }
+.success-title { font-size: 22px; font-weight: 700; color: #111827; margin-bottom: 8px; line-height: 1.35; }
+.success-sub   { font-size: 14px; color: #6B7280; line-height: 1.5; }
+.status-cards  { text-align: left; margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+.status-card {
+  border: 1px solid #E5E7EB; border-radius: 16px; padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.s-icon  { display: flex; align-items: center; flex-shrink: 0; }
+.s-title { font-size: 15px; font-weight: 700; color: #111827; }
+.s-sub   { font-size: 13px; color: #6B7280; margin-top: 2px; line-height: 1.4; }
+
+/* ══════════════════════════════════════ */
+/*  BOTTOM BARS                          */
+/* ══════════════════════════════════════ */
+.bottom {
+  flex-shrink: 0; background: white; border-top: 1px solid #F3F4F6; padding: 12px 20px 28px;
+}
+.btn-primary {
+  width: 100%; height: 56px; background: #F97316; border: none; border-radius: 9999px;
+  font-size: 17px; font-weight: 700; color: white; cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 12px rgba(249,115,22,0.35); transition: opacity 0.2s;
+}
+.btn-primary:hover:not(:disabled) { opacity: 0.9; }
+.btn-primary:disabled { background: #E5E7EB; color: #9CA3AF; box-shadow: none; cursor: not-allowed; }
+.btn-secondary {
+  width: 100%; padding: 12px; background: none; border: none;
+  font-size: 15px; color: #F97316; cursor: pointer; margin-top: 10px;
+  font-weight: 600; font-family: inherit;
+}
+.review-bottom {
+  flex-shrink: 0; background: white; padding: 12px 20px 24px;
+}
+.rv-submit-btn {
+  background: #F97316; border: none; border-radius: 56px; height: 56px; width: 100%;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 20px; cursor: pointer; font-family: inherit;
+  box-shadow: 0 2px 6px -1px rgba(249,107,24,0.45), 0 8px 24px -2px rgba(249,107,24,0.45);
+  transition: opacity 0.2s;
+}
+.rv-submit-btn:hover { opacity: 0.92; }
+.rv-submit-left { display: flex; flex-direction: column; align-items: flex-start; }
+.rv-submit-lbl { font-size: 12px; font-weight: 500; color: white; line-height: 16px; letter-spacing: 0.24px; }
+.rv-submit-amount { font-size: 16px; font-weight: 500; color: white; line-height: 22px; }
+.rv-submit-text { font-size: 18px; font-weight: 700; color: white; line-height: 24px; }
+.submit-btn:hover { opacity: 0.9; }
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+
+  <!-- Inner-page status bar -->
+  <div id="phoneStatusBar" style="display:none; flex-shrink:0; justify-content:space-between; align-items:center; padding:14px 20px 6px; background:white;">
+    <span style="font-size:15px;font-weight:700;color:#111827;">9:41</span>
+    <img src="icons/status-icons.svg" width="67" height="12" alt="">
+  </div>
+
+  <!-- Page header -->
+  <div class="page-header" id="pageHeader" style="display:none">
+    <button class="back-btn" id="backBtn" onclick="goBack()"><img src="icons/back-arrow.svg" width="24" height="24" alt="Back"></button>
+    <div class="header-title" id="headerTitle">Select pet</div>
+  </div>
+
+  <!-- Scrollable content -->
+  <div class="content">
+
+    <!-- ──────────────────────────────────────── -->
+    <!-- STEP 0 · Homepage                        -->
+    <!-- ──────────────────────────────────────── -->
+    <div class="step active" id="step0">
+      <div class="homepage">
+        <div class="blob blob-left"></div>
+        <div class="blob blob-right"></div>
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons"><img src="icons/status-icons.svg" width="67" height="12" alt=""></div>
+        </div>
+        <div class="browser-bar">
+          <span style="font-size:13px;color:#9CA3AF">🔒</span>
+          <span class="browser-url">pawspa.com</span>
+          <span style="font-size:14px;color:#9CA3AF">⬆</span>
+        </div>
+        <div class="home-body">
+          <div class="greeting-row">
+            <div class="greeting-text">
+              <h1>Hello, Mindy</h1>
+              <p>It's time to take care of your furry babies.</p>
+            </div>
+            <div class="user-avatar"><img src="icons/user.svg" width="40" height="40" alt="user"></div>
+          </div>
+          <div class="upcoming-card">
+            <div class="upcoming-top">
+              <span class="upcoming-label">Upcoming</span>
+              <span class="upcoming-pill">In 12 days</span>
+            </div>
+            <div class="upcoming-date-row">
+              <img class="upcoming-cal-icon" src="icons/upcoming-cal.svg" width="36" height="36" alt="">
+              <span>Fri, Oct 24 &nbsp; 09:00 am</span>
+            </div>
+            <div class="upcoming-pet-row">
+              <div class="pet-ava-sm">🐕</div>
+              <div class="pet-info-sm">
+                <span class="pet-name-sm">George</span>
+                <span class="pet-service-sm">Full service – small</span>
+                <span class="pet-groomer-sm"><span class="groomer-ava-xs">✂</span>Lancer Robert</span>
+              </div>
+            </div>
+            <button class="book-cta" onclick="startBooking()">Book new appointment</button>
+          </div>
+          <div class="menu-card">
+            <div class="menu-row"><span class="menu-icon"><img src="icons/calendar.svg" width="24" height="24" alt=""></span><span class="menu-label">Appointments</span><span class="menu-chevron"><img src="icons/chevron-right.svg" width="24" height="24" alt=""></span></div>
+            <div class="menu-row"><span class="menu-icon"><img src="icons/paws.svg" width="24" height="24" alt=""></span><span class="menu-label">Pets</span><span class="menu-chevron"><img src="icons/chevron-right.svg" width="24" height="24" alt=""></span></div>
+            <div class="menu-row"><span class="menu-icon"><img src="icons/package.svg" width="24" height="24" alt=""></span><span class="menu-label">Packages</span><span class="menu-chevron"><img src="icons/chevron-right.svg" width="24" height="24" alt=""></span></div>
+            <div class="menu-row"><span class="menu-icon"><img src="icons/membership.svg" width="24" height="24" alt=""></span><span class="menu-label">Membership</span><span class="menu-chevron"><img src="icons/chevron-right.svg" width="24" height="24" alt=""></span></div>
+            <div class="menu-row"><span class="menu-icon"><img src="icons/report-cards.svg" width="24" height="24" alt=""></span><span class="menu-label">Report cards</span><span class="menu-chevron"><img src="icons/chevron-right.svg" width="24" height="24" alt=""></span></div>
+            <div class="menu-row"><span class="menu-icon"><img src="icons/file.svg" width="24" height="24" alt=""></span><span class="menu-label">Agreements</span><span class="menu-chevron"><img src="icons/chevron-right.svg" width="24" height="24" alt=""></span></div>
+            <div class="menu-row"><span class="menu-icon"><img src="icons/card.svg" width="24" height="24" alt=""></span><span class="menu-label">Payment</span><span class="menu-chevron"><img src="icons/chevron-right.svg" width="24" height="24" alt=""></span></div>
+          </div>
+          <div class="brand-footer">
+            <div class="brand-logo">🐾</div>
+            <div><div class="brand-name">Swaggy Pet Spa</div><div class="brand-addr">9010 Bay St, Los Angeles, CA 90001</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────── -->
+    <!-- STEP 1 · Select Pet                      -->
+    <!-- ──────────────────────────────────────── -->
+    <div class="step" id="step1">
+      <div class="inner-pad">
+        <div class="pet-list-header">
+          <span class="pet-list-title">Pet list</span>
+          <span class="pet-add-link">Add pet</span>
+        </div>
+        <div class="pet-grid">
+          <div class="pet-card" onclick="selectPet(this,'Buddy','Golden Retriever','🐕')">
+            <div class="pet-card-corner">✎</div>
+            <div class="pet-avatar">🐕</div>
+            <div class="pet-card-name">Buddy</div>
+            <div class="pet-card-meta">Golden Retriever</div>
+          </div>
+          <div class="pet-card" onclick="selectPet(this,'Charlie','Goldendoodle','🐩')">
+            <div class="pet-card-corner">✎</div>
+            <div class="pet-avatar">🐩</div>
+            <div class="pet-card-name">Charlie</div>
+            <div class="pet-card-meta">Goldendoodle</div>
+          </div>
+          <div class="pet-card" onclick="selectPet(this,'Coco','Shih Tzu','🦮')">
+            <div class="pet-card-corner">✎</div>
+            <div class="pet-avatar">🦮</div>
+            <div class="pet-card-name">Coco</div>
+            <div class="pet-card-meta">Shih Tzu</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────── -->
+    <!-- STEP 2 · Select Service & Add-ons        -->
+    <!-- ──────────────────────────────────────── -->
+    <div class="step" id="step2">
+      <div class="inner-pad">
+        <div class="step-subtitle" id="step2Sub">Choose a service for your dog</div>
+
+        <!-- ── Service selection view (default) ── -->
+        <div id="svcSelView">
+          <!-- Category quick selector -->
+          <div class="cat-dropdown-wrap">
+            <div class="cat-dropdown-sel" id="catDropSel" onclick="toggleCatDD()">
+              <span id="catDropLabel">All Categories</span>
+              <span class="cat-dd-caret">&#8964;</span>
+            </div>
+            <div class="cat-dd-menu" id="catDropMenu">
+              <div class="cat-dd-item active" onclick="filterCat('All')">All Categories</div>
+              <div class="cat-dd-item" onclick="filterCat('Full service')">Full service</div>
+              <div class="cat-dd-item" onclick="filterCat('Bath')">Bath</div>
+            </div>
+          </div>
+          <!-- Service list (rendered by JS) -->
+          <div class="service-list" id="serviceList"></div>
+        </div>
+
+        <!-- ── Pinned selected service + add-ons ── -->
+        <div id="svcSelectedView" style="display:none">
+          <!-- Pinned card -->
+          <div class="svc-pinned-card" id="svcPinnedCard">
+            <div class="svc-pinned-info">
+              <div class="svc-pinned-name" id="pinnedName">—</div>
+              <div class="svc-pinned-show" onclick="changeService()">Show details</div>
+            </div>
+            <div class="svc-pinned-price" id="pinnedPrice">—</div>
+          </div>
+
+          <!-- Add-ons -->
+          <div class="addons-wrap">
+            <div class="addons-title">Anything to add?</div>
+            <div class="addon-cat-wrap">
+              <div class="addon-cat-sel">
+                <span>All Categories</span>
+                <span class="addon-cat-caret">&#8964;</span>
+              </div>
+            </div>
+            <div class="addon-list">
+              <div class="addon-card" onclick="toggleAddon(this,'Teeth Brushing',12)">
+                <div class="addon-info"><div class="addon-name">Teeth Brushing</div><div class="addon-show-details">Show details</div></div>
+                <div class="addon-price-pill">$12</div>
+              </div>
+              <div class="addon-card" onclick="toggleAddon(this,'Nail Grinding',10)">
+                <div class="addon-info"><div class="addon-name">Nail Grinding</div><div class="addon-show-details">Show details</div></div>
+                <div class="addon-price-pill">$10</div>
+              </div>
+              <div class="addon-card" onclick="toggleAddon(this,'De-shedding Treatment',20)">
+                <div class="addon-info"><div class="addon-name">De-shedding Treatment</div><div class="addon-show-details">Show details</div></div>
+                <div class="addon-price-pill">$20</div>
+              </div>
+              <div class="addon-card" onclick="toggleAddon(this,'Blueberry Facial',15)">
+                <div class="addon-info"><div class="addon-name">Blueberry Facial</div><div class="addon-show-details">Show details</div></div>
+                <div class="addon-price-pill">$15</div>
+              </div>
+              <div class="addon-card" onclick="toggleAddon(this,'Ear Cleaning',8)">
+                <div class="addon-info"><div class="addon-name">Ear Cleaning</div><div class="addon-show-details">Show details</div></div>
+                <div class="addon-price-pill">$8</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────── -->
+    <!-- STEP 3 · Select Date & Time              -->
+    <!-- ──────────────────────────────────────── -->
+    <div class="step" id="step3">
+      <div class="inner-pad">
+        <div class="step-subtitle">Pick your preferred groomer and time</div>
+
+        <!-- Groomer dropdown (no shadow) -->
+        <div class="groomer-wrap">
+          <div class="groomer-selector" id="groomerSel" onclick="toggleGroomerDD()">
+            <div class="groomer-ava" id="groomerAva">😊</div>
+            <div style="flex:1">
+              <div class="groomer-lbl">Groomer</div>
+              <div class="groomer-name" id="groomerName">I'm good with anyone</div>
+            </div>
+            <div class="groomer-caret" id="groomerCaret">▾</div>
+          </div>
+          <div class="groomer-dropdown" id="groomerDD">
+            <!-- Rendered by JS from GROOMERS array -->
+          </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="cal-header">
+          <div class="cal-month-label" id="calMonth"></div>
+          <div class="cal-nav-group">
+            <button class="cal-nav" onclick="changeMonth(-1)">&#8249;</button>
+            <button class="cal-nav" onclick="changeMonth(1)">&#8250;</button>
+            <button class="cal-today-btn" onclick="goToday()">Today</button>
+          </div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+
+        <!-- Time slots (AM/PM rendered by JS) -->
+        <div id="timeSec" style="display:none"></div>
+
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────── -->
+    <!-- STEP 4 · Review Booking Request          -->
+    <!-- ──────────────────────────────────────── -->
+    <div class="step" id="step4">
+      <div class="review-pad">
+
+        <!-- Service card -->
+        <div>
+          <div class="rv-svc-header">
+            <img src="icons/calendar.svg" width="24" height="24" alt="">
+            <span class="rv-svc-header-title" id="r-svc-title">—</span>
+          </div>
+          <div class="rv-svc-body">
+            <div class="rv-datetime-row">
+              <div class="rv-dt-col">
+                <span class="rv-label">Date:</span>
+                <span class="rv-value-lg" id="r-date">—</span>
+                <span class="rv-label" id="r-time">—</span>
+              </div>
+              <div class="rv-dt-divider"></div>
+              <div class="rv-dt-col">
+                <span class="rv-label">Duration:</span>
+                <span class="rv-value-lg" id="r-dur">—</span>
+              </div>
+            </div>
+            <div class="rv-info-block">
+              <span class="rv-label">Groomer:</span>
+              <span class="rv-value-lg" id="r-groomer">—</span>
+            </div>
+            <div class="rv-info-block">
+              <span class="rv-label">Guest pet(s):</span>
+              <div class="rv-pet-row">
+                <span class="rv-pet-emoji" id="r-pet-emoji">🐾</span>
+                <span class="rv-value-lg" id="r-pet-name">—</span>
+              </div>
+            </div>
+            <div class="rv-svc-details-row" onclick="toggleSvcDetails()">
+              <span class="rv-svc-details-lbl">Service details</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div id="svcDetails" class="rv-svc-details-body"></div>
+          </div>
+        </div>
+
+        <!-- About you -->
+        <div class="rv-section">
+          <p class="rv-section-title">About you</p>
+          <div class="rv-card rv-about-card">
+            <div class="rv-edit-btn">
+              <img src="icons/edit-icon.svg" width="20" height="20" alt="" onerror="this.style.display='none'">
+            </div>
+            <p class="rv-about-name">Mindy Chen</p>
+            <div class="rv-contact-group">
+              <p class="rv-label">Cell phone number</p>
+              <p class="rv-value-md">123-456-7890</p>
+            </div>
+            <div class="rv-contact-group">
+              <p class="rv-label">Email</p>
+              <p class="rv-value-md">mindy.chen@gmail.com</p>
+            </div>
+            <div class="rv-contact-group">
+              <p class="rv-label">Address</p>
+              <p class="rv-value-md">123, New St, New York City</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estimated price -->
+        <div class="rv-section">
+          <div>
+            <p class="rv-section-title">Estimated price</p>
+            <p class="rv-disclaimer">*Final price may vary based on service details and other conditions.</p>
+          </div>
+          <div class="rv-card">
+            <div class="rv-price-inner">
+              <div class="rv-price-row">
+                <span class="rv-price-lbl">Service total:</span>
+                <span class="rv-price-val" id="r-base">—</span>
+              </div>
+              <div class="rv-price-row">
+                <span class="rv-price-lbl">Tax and fees:</span>
+                <span class="rv-price-val" id="r-tax">—</span>
+              </div>
+              <div class="rv-price-total">
+                <span>Total:</span>
+                <span id="r-total">—</span>
+              </div>
+              <div class="rv-deposit-alert" id="r-deposit"></div>
+            </div>
+          </div>
+          <div class="rv-row-card">
+            <span class="rv-row-lbl">Enter discount code</span>
+            <div class="rv-row-chevron"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
+          <div class="rv-policy-card">
+            <p class="rv-policy-title">Cancellation policy</p>
+            <p class="rv-policy-text">If you need to cancel or reschedule your pet's appointment, please notify us at least 48 hours in advance to avoid any cancellation fees. For cancellations within 48 hours, a fee may apply.</p>
+            <p class="rv-policy-link">View details</p>
+          </div>
+        </div>
+
+        <!-- Payment method -->
+        <div class="rv-section">
+          <p class="rv-section-title">Payment method</p>
+          <div class="rv-card rv-payment-card">
+            <div class="rv-pay-row">
+              <img src="icons/credit-card-icon.svg" width="24" height="24" alt="" style="flex-shrink:0">
+              <span class="rv-pay-lbl">Credit or debit card</span>
+              <div class="rv-row-chevron"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            </div>
+            <div class="rv-pay-row">
+              <span style="font-size:11px;font-weight:800;color:#111;flex-shrink:0;width:24px;text-align:center;letter-spacing:-0.5px">Pay</span>
+              <span class="rv-pay-lbl">Apple Pay</span>
+              <img src="icons/check-circle.svg" width="24" height="24" alt="" style="flex-shrink:0">
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional note -->
+        <div class="rv-section">
+          <p class="rv-section-title">Additional note</p>
+          <div class="rv-card rv-note-card">
+            <p class="rv-note-placeholder">Anything else you'd like us to know?</p>
+          </div>
+        </div>
+
+        <!-- Agreement -->
+        <div class="rv-section">
+          <p class="rv-section-title">Agreement</p>
+          <div class="rv-card rv-agreement-card">
+            <div class="rv-agreement-icon-wrap">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12h6M9 16h4M7 4H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-2M9 4a2 2 0 002 2h2a2 2 0 002-2M9 4a2 2 0 012-2h2a2 2 0 012 2" stroke="#333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <p class="rv-agreement-name">PawSpa Service Agreement</p>
+              <p class="rv-agreement-sign">Sign agreement</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────── -->
+    <!-- STEP 5 · Booking Submitted               -->
+    <!-- ──────────────────────────────────────── -->
+    <div class="step" id="step5">
+      <div class="success-wrap">
+        <div class="success-icon">🐾</div>
+        <div class="success-title">Yay! Your booking request has been submitted! 🎉</div>
+        <div class="success-sub">We'll send you a confirmation once the groomer approves.</div>
+        <div class="status-cards">
+          <div class="status-card">
+            <span class="s-icon">✅</span>
+            <div><div class="s-title">Request submitted</div><div class="s-sub" id="s-svc">—</div></div>
+          </div>
+          <div class="status-card">
+            <span class="s-icon">⏳</span>
+            <div><div class="s-title">Waiting for confirmation</div><div class="s-sub" id="s-dt">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- Standard CTA (steps 1–3, 5) -->
+  <div class="bottom" id="stdBottom" style="display:none">
+    <button class="btn-primary" id="nextBtn" onclick="goNext()" disabled>Next</button>
+    <button class="btn-secondary" id="secBtn" style="display:none" onclick="resetAll()">Back to client portal</button>
+  </div>
+
+  <!-- Review bottom bar (step 4) -->
+  <div class="review-bottom" id="reviewBottom" style="display:none">
+    <button class="rv-submit-btn" onclick="submitBooking()">
+      <div class="rv-submit-left">
+        <span class="rv-submit-lbl">Payment amount</span>
+        <span class="rv-submit-amount" id="r-payment">$0.00</span>
+      </div>
+      <span class="rv-submit-text">Submit</span>
+    </button>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+/* ═══════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════ */
+const SERVICES = [
+  { cat:'Full service', name:'Full service – small',  icon:'✂️', price:85,  dur:90  },
+  { cat:'Full service', name:'Full service – medium', icon:'✂️', price:105, dur:110 },
+  { cat:'Full service', name:'Full service – large',  icon:'✂️', price:125, dur:130 },
+  { cat:'Bath',         name:'Bath – small',          icon:'🛁', price:45,  dur:45  },
+  { cat:'Bath',         name:'Bath – medium',         icon:'🛁', price:55,  dur:60  },
+  { cat:'Bath',         name:'Bath – large',          icon:'🛁', price:70,  dur:75  },
+];
+
+const GROOMERS = [
+  { name:"I'm good with anyone", emoji:'😊',  avail: null,              badge: null              },
+  { name:'Sarah Kim',            emoji:'👩',  avail: 'tomorrow',        badge: 'Preferred'       },
+  { name:'Jose Ramos',           emoji:'👨‍🦱', avail: '03/14/2026',      badge: 'Last appointment' },
+  { name:'Emma Davis',           emoji:'👩‍🦱', avail: '03/15/2026',      badge: null              },
+  { name:'Marcus Lee',           emoji:'👨🏾', avail: '03/16/2026',      badge: null              },
+];
+
+const STEP_TITLES = {
+  1:'Select pet',
+  2:'Select service & add-ons',
+  3:'Select a time',
+  4:'Review booking request',
+  5:'Booking submitted',
+};
+
+const ALL_TIMES = [
+  '09:00 am','09:30 am','10:00 am','10:30 am','11:00 am','11:30 am',
+  '12:00 pm','12:30 pm','01:00 pm','01:30 pm','02:00 pm','02:30 pm',
+  '03:00 pm','03:30 pm','04:00 pm','04:30 pm','05:00 pm',
+];
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+const S = {
+  step: 0,
+  pet: null, petEmoji: '🐾', petBreed: '', petMeta: '',
+  service: null, serviceIcon: '🛁', price: 0, duration: 0,
+  addons: [], addonTotal: 0,
+  groomer: GROOMERS[0].name, groomerIdx: 0,
+  date: null, time: null,
+  paymentIdx: 1,
+};
+
+const today = new Date();
+let calY = today.getFullYear(), calM = today.getMonth();
+let groomerOpen = false;
+let activeCat = 'All';
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+function init() {
+  renderServiceList();
+  renderGroomerDropdown();
+  renderCalendar();
+  syncUI();
+}
+
+/* ═══════════════════════════════════════
+   UI SYNC
+═══════════════════════════════════════ */
+function syncUI() {
+  document.querySelectorAll('.step').forEach((el, i) => el.classList.toggle('active', i === S.step));
+
+  const home = S.step === 0, success = S.step === 5, review = S.step === 4;
+
+  document.getElementById('phoneStatusBar').style.display = home ? 'none' : 'flex';
+  document.getElementById('pageHeader').style.display = home ? 'none' : 'flex';
+  if (!home) {
+    document.getElementById('headerTitle').textContent = STEP_TITLES[S.step] || '';
+    document.getElementById('backBtn').style.visibility = success ? 'hidden' : 'visible';
+  }
+
+  document.getElementById('stdBottom').style.display    = (home || review) ? 'none' : 'block';
+  document.getElementById('reviewBottom').style.display = review ? 'flex' : 'none';
+
+  if (!home && !review) {
+    const btn = document.getElementById('nextBtn');
+    const sec = document.getElementById('secBtn');
+    sec.style.display = 'none';
+    switch (S.step) {
+      case 1:
+        btn.textContent = S.pet ? `Book for ${S.pet}` : 'Select a pet above';
+        btn.disabled = !S.pet; break;
+      case 2:
+        btn.textContent = S.service ? 'Select a professional' : 'Select a service above';
+        btn.disabled = !S.service; break;
+      case 3:
+        if (!S.date)      { btn.textContent = 'Select a date above';  btn.disabled = true; }
+        else if (!S.time) { btn.textContent = 'Select a time above';  btn.disabled = true; }
+        else              { btn.textContent = `Continue with ${fmtShort(S.date)}`; btn.disabled = false; }
+        break;
+      case 5:
+        btn.textContent = 'Book new appointment'; btn.disabled = false;
+        sec.style.display = 'block'; break;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════ */
+function startBooking() { S.step = 1; syncUI(); }
+
+function goNext() {
+  if (S.step === 5) { resetAll(); startBooking(); return; }
+  if (S.step === 3) { fillReview(); S.step = 4; syncUI(); return; }
+  S.step++;
+  if (S.step === 3) initStep3();
+  if (S.step === 5) fillSuccess();
+  syncUI();
+}
+
+function goBack() {
+  if (S.step <= 0) return;
+  S.step = S.step === 1 ? 0 : S.step - 1;
+  syncUI();
+}
+
+function submitBooking() { fillSuccess(); S.step = 5; syncUI(); }
+
+/* ═══════════════════════════════════════
+   STEP 1 — PET
+═══════════════════════════════════════ */
+function selectPet(el, name, breed, emoji) {
+  document.querySelectorAll('.pet-card').forEach(c => {
+    c.classList.remove('selected');
+    c.querySelector('.pet-card-corner').textContent = '✎';
+  });
+  el.classList.add('selected');
+  el.querySelector('.pet-card-corner').textContent = '✓';
+  Object.assign(S, { pet: name, petEmoji: emoji, petBreed: breed, petMeta: '' });
+  document.getElementById('step2Sub').textContent = `Choose a service for ${name}`;
+  document.getElementById('nextBtn').textContent = `Book for ${name}`;
+  syncUI();
+}
+
+/* ═══════════════════════════════════════
+   STEP 2 — SERVICE SELECTION
+═══════════════════════════════════════ */
+function renderServiceList(cat) {
+  cat = cat || activeCat;
+  const list = document.getElementById('serviceList');
+  list.innerHTML = '';
+  const filtered = cat === 'All' ? SERVICES : SERVICES.filter(s => s.cat === cat);
+  filtered.forEach(svc => {
+    const card = document.createElement('div');
+    card.className = 'service-card';
+    card.innerHTML = `
+      <div class="svc-info">
+        <div class="svc-name">${svc.name}</div>
+        <div class="svc-show-details">Show details</div>
+      </div>
+      <div class="svc-price-pill">$${svc.price}</div>`;
+    card.onclick = () => selectService(svc);
+    list.appendChild(card);
+  });
+}
+
+function toggleCatDD() {
+  const sel  = document.getElementById('catDropSel');
+  const menu = document.getElementById('catDropMenu');
+  const open = menu.classList.toggle('open');
+  sel.classList.toggle('open', open);
+}
+
+function filterCat(cat) {
+  activeCat = cat;
+  const label = cat === 'All' ? 'All Categories' : cat;
+  document.getElementById('catDropLabel').textContent = label;
+  document.querySelectorAll('.cat-dd-item').forEach(el => {
+    el.classList.toggle('active', el.textContent.trim() === label);
+  });
+  document.getElementById('catDropMenu').classList.remove('open');
+  document.getElementById('catDropSel').classList.remove('open');
+  renderServiceList(cat);
+}
+
+function selectService(svc) {
+  S.service     = svc.name;
+  S.serviceIcon = svc.icon;
+  S.price       = svc.price;
+  S.duration    = svc.dur;
+
+  // Update pinned card
+  document.getElementById('pinnedName').textContent  = svc.name;
+  document.getElementById('pinnedPrice').textContent = `$${svc.price}`;
+
+  // Switch views
+  document.getElementById('svcSelView').style.display      = 'none';
+  document.getElementById('svcSelectedView').style.display = 'block';
+  syncUI();
+}
+
+function changeService() {
+  S.service = null; S.price = 0; S.duration = 0;
+  S.addons = []; S.addonTotal = 0;
+  // Reset add-on checkboxes
+  document.querySelectorAll('.addon-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('svcSelView').style.display      = 'block';
+  document.getElementById('svcSelectedView').style.display = 'none';
+  syncUI();
+}
+
+function toggleAddon(el, name, price) {
+  el.classList.toggle('selected');
+  const on = el.classList.contains('selected');
+  if (on) { S.addons.push({ name, price }); S.addonTotal += price; }
+  else    { S.addons = S.addons.filter(a => a.name !== name); S.addonTotal -= price; }
+}
+
+/* ═══════════════════════════════════════
+   STEP 3 — DATE & TIME
+═══════════════════════════════════════ */
+
+/* Auto-select earliest available date + first time on page entry */
+function initStep3() {
+  if (S.date) return; // keep existing selection if already picked
+  const d = new Date(today);
+  for (let i = 0; i < 60; i++) {
+    if (d.getDay() !== 0) { // skip Sundays
+      const ds = fmtDate(d.getFullYear(), d.getMonth(), d.getDate());
+      calY = d.getFullYear(); calM = d.getMonth();
+      S.date = ds;
+      // auto-select first available time
+      const dayN = parseInt(ds.slice(-2));
+      const busy = getBusyTimes(dayN);
+      S.time = ALL_TIMES.find(t => !busy.has(t)) || null;
+      renderCalendar();
+      renderTimeSlots(ds);
+      document.getElementById('timeSec').style.display = 'block';
+      break;
+    }
+    d.setDate(d.getDate() + 1);
+  }
+}
+
+/* Groomer dropdown */
+function renderGroomerDropdown() {
+  const dd = document.getElementById('groomerDD');
+  dd.innerHTML = '';
+  GROOMERS.forEach((g, i) => {
+    const opt = document.createElement('div');
+    opt.className = 'groomer-opt' + (i === S.groomerIdx ? ' active' : '');
+    opt.id = 'gopt' + i;
+    const badgeHtml = g.badge
+      ? `<span class="groomer-badge ${g.badge === 'Preferred' ? 'groomer-badge-preferred' : 'groomer-badge-last'}">${g.badge}</span>`
+      : '';
+    const availHtml = g.avail
+      ? `<div class="groomer-opt-avail">Available ${g.avail}</div>`
+      : '';
+    opt.innerHTML = `
+      <span style="font-size:18px;flex-shrink:0">${g.emoji}</span>
+      <div class="groomer-opt-meta">
+        <div class="groomer-opt-name-row">
+          <span class="groomer-opt-name">${g.name}</span>
+          ${badgeHtml}
+        </div>
+        ${availHtml}
+      </div>
+      <span class="groomer-opt-check" id="gck${i}" style="${i === S.groomerIdx ? '' : 'display:none'}">✓</span>`;
+    opt.onclick = (e) => pickGroomer(i, e);
+    dd.appendChild(opt);
+  });
+}
+
+function setGroomerDD(open) {
+  groomerOpen = open;
+  document.getElementById('groomerDD').classList.toggle('open', open);
+  document.getElementById('groomerSel').classList.toggle('open', open);
+  document.getElementById('groomerCaret').classList.toggle('open', open);
+}
+function toggleGroomerDD() { setGroomerDD(!groomerOpen); }
+
+function pickGroomer(idx, e) {
+  e.stopPropagation();
+  S.groomerIdx = idx; S.groomer = GROOMERS[idx].name;
+  document.getElementById('groomerName').textContent = GROOMERS[idx].name;
+  document.getElementById('groomerAva').textContent  = GROOMERS[idx].emoji;
+  GROOMERS.forEach((_, i) => {
+    document.getElementById('gopt' + i).classList.toggle('active', i === idx);
+    document.getElementById('gck' + i).style.display = i === idx ? 'inline' : 'none';
+  });
+  setGroomerDD(false);
+}
+
+/* Calendar */
+function renderCalendar() {
+  const MN = ['January','February','March','April','May','June',
+              'July','August','September','October','November','December'];
+  document.getElementById('calMonth').textContent = `${MN[calM]} ${calY}`;
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+  ['S','M','T','W','T','F','S'].forEach(d => {
+    const el = document.createElement('div'); el.className = 'cal-weekday'; el.textContent = d; grid.appendChild(el);
+  });
+  const firstDay  = new Date(calY, calM, 1).getDay();
+  const totalDays = new Date(calY, calM + 1, 0).getDate();
+  const todayStr  = fmtDate(today.getFullYear(), today.getMonth(), today.getDate());
+  for (let i = 0; i < firstDay; i++) grid.appendChild(mkCell('', true, false, false, false, null));
+  for (let d = 1; d <= totalDays; d++) {
+    const ds   = fmtDate(calY, calM, d);
+    const obj  = new Date(calY, calM, d);
+    const past = obj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const sun  = obj.getDay() === 0;
+    grid.appendChild(mkCell(d, false, past || sun, ds === todayStr, S.date === ds, ds, isAmFull(d)));
+  }
+}
+
+function mkCell(day, empty, disabled, isToday, isSel, dateStr, amFull) {
+  const wrap = document.createElement('div'); wrap.className = 'cal-day-cell';
+  const d    = document.createElement('div'); d.className   = 'cal-day';
+  if (empty)    { d.classList.add('empty'); d.textContent = ''; }
+  else if (disabled) {
+    d.classList.add('disabled');
+    const num = document.createElement('div'); num.className = 'cal-day-num'; num.textContent = day;
+    d.appendChild(num);
+  } else {
+    d.classList.add('avail');
+    if (isToday) d.classList.add('today');
+    if (isSel)   d.classList.add('selected');
+    d.onclick = () => pickDate(dateStr);
+    const num = document.createElement('div'); num.className = 'cal-day-num'; num.textContent = day;
+    d.appendChild(num);
+    const dotRow = document.createElement('div'); dotRow.className = 'cal-dots-row';
+    // Dot 1 = AM availability, Dot 2 = PM availability
+    const dot1 = document.createElement('div'); dot1.className = 'avail-dot' + (amFull ? ' dot-gray' : ''); dotRow.appendChild(dot1);
+    const dot2 = document.createElement('div'); dot2.className = 'avail-dot'; dotRow.appendChild(dot2);
+    d.appendChild(dotRow);
+  }
+  wrap.appendChild(d);
+  return wrap;
+}
+
+function pickDate(ds) {
+  S.date = ds; S.time = null;
+  renderCalendar(); renderTimeSlots(ds);
+  document.getElementById('timeSec').style.display = 'block';
+  syncUI();
+}
+
+const AM_FULL_DAYS = new Set([14, 18]); // days where AM is fully booked
+
+function getBusyTimes(dayN) {
+  if (AM_FULL_DAYS.has(dayN)) {
+    return new Set(ALL_TIMES.filter(t => t.endsWith('am')));
+  }
+  return new Set();
+}
+
+function isAmFull(dayN) { return AM_FULL_DAYS.has(dayN); }
+
+function renderTimeSlots(ds) {
+  const dayN = parseInt(ds.slice(-2));
+  const busy = getBusyTimes(dayN);
+  const container = document.getElementById('timeSec');
+  container.innerHTML = '';
+  const amTimes = ALL_TIMES.filter(t => t.endsWith('am'));
+  const pmTimes = ALL_TIMES.filter(t => t.endsWith('pm'));
+  function renderSection(label, times) {
+    const available = times.filter(t => !busy.has(t));
+    if (available.length === 0) return;
+    const lbl = document.createElement('div'); lbl.className = 'time-section-label'; lbl.textContent = label;
+    container.appendChild(lbl);
+    const grid = document.createElement('div'); grid.className = 'time-pills';
+    available.forEach(t => {
+      const p = document.createElement('div');
+      p.className   = 'time-pill' + (S.time === t ? ' selected' : '');
+      p.textContent = t;
+      p.onclick = () => pickTime(t, p);
+      grid.appendChild(p);
+    });
+    container.appendChild(grid);
+  }
+  renderSection('AM', amTimes);
+  renderSection('PM', pmTimes);
+}
+
+function pickTime(t, el) {
+  document.querySelectorAll('#timeSec .time-pill:not(.busy)').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  S.time = t; syncUI();
+}
+
+function changeMonth(dir) {
+  calM += dir;
+  if (calM > 11) { calM = 0; calY++; }
+  if (calM < 0)  { calM = 11; calY--; }
+  S.date = null; S.time = null;
+  document.getElementById('timeSec').style.display = 'none';
+  renderCalendar(); syncUI();
+}
+
+function goToday() {
+  calY = today.getFullYear(); calM = today.getMonth();
+  S.date = null; S.time = null;
+  document.getElementById('timeSec').style.display = 'none';
+  renderCalendar(); syncUI();
+}
+
+/* ═══════════════════════════════════════
+   STEP 4 — REVIEW
+═══════════════════════════════════════ */
+function fillReview() {
+  const base    = S.price + S.addonTotal;
+  const tax     = Math.round(base * 0.1);
+  const total   = base + tax;
+  const deposit = Math.round(total * 0.5) + 2;
+
+  const addOnCount = S.addons.length;
+  document.getElementById('r-svc-title').textContent = addOnCount
+    ? `${S.service} · ${addOnCount} add-on${addOnCount > 1 ? 's' : ''}`
+    : S.service;
+  document.getElementById('r-date').textContent      = fmtFull(S.date);
+  document.getElementById('r-time').textContent      = S.time;
+  document.getElementById('r-dur').textContent       = `~${S.duration} min`;
+  document.getElementById('r-groomer').textContent   = S.groomer;
+  document.getElementById('r-pet-emoji').textContent = S.petEmoji;
+  document.getElementById('r-pet-name').textContent  = S.pet;
+  document.getElementById('svcDetails').textContent  = S.addons.length
+    ? S.addons.map(a => `${a.name}  +$${a.price}`).join('\n')
+    : 'No add-ons selected';
+  document.getElementById('r-base').textContent    = `$${base}.00`;
+  document.getElementById('r-tax').textContent     = `$${tax}.00`;
+  document.getElementById('r-total').textContent   = `$${total}.00`;
+  document.getElementById('r-deposit').textContent =
+    `$${deposit}.00 deposit (including $2 fees) is required to secure your booking.`;
+  document.getElementById('r-payment').textContent = `$${deposit}.00`;
+}
+
+function toggleSvcDetails() {
+  const b = document.getElementById('svcDetails');
+  const open = b.style.display === 'block';
+  b.style.display = open ? 'none' : 'block';
+}
+function toggleCollapse(key) {
+  const body  = document.getElementById('collapse-' + key);
+  const caret = document.getElementById('caret-' + key);
+  const open  = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  caret.classList.toggle('open', !open);
+}
+function pickPayment(idx) {
+  S.paymentIdx = idx;
+  document.getElementById('prad0')?.classList.toggle('on', idx === 0);
+  document.getElementById('prad1')?.classList.toggle('on', idx === 1);
+}
+
+/* ═══════════════════════════════════════
+   STEP 5 — SUCCESS
+═══════════════════════════════════════ */
+function fillSuccess() {
+  const base    = S.price + S.addonTotal;
+  const total   = base + Math.round(base * 0.1);
+  const deposit = Math.round(total * 0.5) + 2;
+  document.getElementById('s-svc').textContent = `${S.service} · $${deposit}.00 deposit`;
+  document.getElementById('s-dt').textContent  = `${fmtFull(S.date)} at ${S.time}`;
+}
+
+/* ═══════════════════════════════════════
+   RESET
+═══════════════════════════════════════ */
+function resetAll() {
+  Object.assign(S, {
+    step: 0, pet: null, petEmoji: '🐾', petBreed: '', petMeta: '',
+    service: null, serviceIcon: '🛁', price: 0, duration: 0,
+    addons: [], addonTotal: 0,
+    groomer: GROOMERS[0].name, groomerIdx: 0,
+    date: null, time: null, paymentIdx: 1,
+  });
+  activeCat = 'All';
+  document.querySelectorAll('.pet-card').forEach(c => {
+    c.classList.remove('selected');
+    const corner = c.querySelector('.pet-card-corner');
+    if (corner) corner.textContent = '✎';
+  });
+  document.getElementById('nextBtn').textContent = 'Next';
+  document.querySelectorAll('.addon-card').forEach(c => c.classList.remove('selected'));
+  // Reset service views
+  document.getElementById('svcSelView').style.display      = 'block';
+  document.getElementById('svcSelectedView').style.display = 'none';
+  filterCat('All');
+  // Reset groomer
+  document.getElementById('groomerName').textContent = GROOMERS[0].name;
+  document.getElementById('groomerAva').textContent  = GROOMERS[0].emoji;
+  renderGroomerDropdown();
+  setGroomerDD(false);
+  // Reset date/time
+  document.getElementById('timeSec').style.display = 'none';
+  calY = today.getFullYear(); calM = today.getMonth();
+  renderCalendar();
+  // Reset payment
+  document.getElementById('prad0')?.classList.remove('on');
+  document.getElementById('prad1')?.classList.add('on');
+  syncUI();
+}
+
+/* ═══════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════ */
+function fmtDate(y, m, d) {
+  return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+function fmtShort(ds) {
+  const d = new Date(ds + 'T00:00');
+  const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${M[d.getMonth()]} ${d.getDate()}`;
+}
+function fmtFull(ds) {
+  if (!ds) return '—';
+  const d = new Date(ds + 'T00:00');
+  const D = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const M = ['January','February','March','April','May','June',
+             'July','August','September','October','November','December'];
+  return `${D[d.getDay()]}, ${M[d.getMonth()]} ${d.getDate()}`;
+}
+
+init();
+</script>
+</body>
+</html>
